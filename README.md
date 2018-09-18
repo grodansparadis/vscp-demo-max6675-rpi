@@ -6,6 +6,8 @@
 
 This is work baed on work done by Matthew Robinson (https://github.com/mttrb)
 
+Enable spi interface with easpi-config before compile
+
 
 Copyright -2018 Matthew Robinson - https://github.com/mttrb
 

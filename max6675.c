@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <wiringPi.h>
+#include <wiringPiSPI.h>
 
 #include "max6675.h"
 
 
 #define MAX6675_CLOCK_SPEED 4000000
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // MAX6675Setup
@@ -33,7 +35,7 @@ MAX6675 MAX6675Setup( int SPIChannel )
 void MAX6675Free( MAX6675 max6675 ) 
 {
     if ( max6675 ) {
-        free(max6675);
+        free( max6675 );
     }
 }
 
@@ -74,7 +76,7 @@ float MAX6675GetTempC( MAX6675 max6675 )
         return 0.0f;
     }
 
-    char buffer[2] = {0, 0};
+    unsigned char buffer[2] = {0, 0};
 
     int ret = wiringPiSPIDataRW( max6675->SPIChannel, buffer, 2 );
 
@@ -112,7 +114,8 @@ float MAX6675GetTempF( MAX6675 max6675 )
 //
 //
 
-float MAX6675GetTemp( MAX6675 max6675 ) {
+float MAX6675GetTemp( MAX6675 max6675 ) 
+{
     if ( max6675 ) {
 
         switch ( max6675->scale ) {
