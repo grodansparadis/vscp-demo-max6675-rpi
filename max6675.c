@@ -25,21 +25,25 @@
 //
 
 
-#if defined(WIRINGPI) || defined(PIGPIO)
 MAX6675 MAX6675Setup( int spi_channel ) 
-#else
-MAX6675 MAX6675Setup( int pi, int spi_channel ) 
-#endif	
 {
     int h = 0;	
+    int pi = 0;
 #if defined(WIRINGPI)
     if ( wiringPiSPISetup( spi_channel, MAX6675_CLOCK_SPEED ) == -1 )  {
 #elif defined(PIGPIO)
-    gpioInitialise();
+    if ( PI_INIT_FAILED == gpioInitialise() ) {
+    	return 0;	
+    }
     if ( ( h = spiOpen(  spi_channel, MAX6675_CLOCK_SPEED , 0 ) ) < 0 ) {
+   	gpioTerminate();
 #elif defined(PIGPIOIF2)
+    if ( ( pi = pigpio_start("127.0.0.1","8888") ) < 0 ) {
+    	return 0;
+    }
     if ( ( h = spi_open( pi, spi_channel, MAX6675_CLOCK_SPEED, 0 ) ) < 0 ) {
-#endif	    
+	pigpio_stop(pi);
+#endif
         return 0;
     }
 
@@ -48,6 +52,7 @@ MAX6675 MAX6675Setup( int pi, int spi_channel )
     max6675->m_SpiChannel = spi_channel;
     max6675->m_scale = MAX6675_CELSIUS;
     max6675->m_handle = h;
+    max6675->m_pi = pi;
 
     return max6675;
 }
@@ -63,7 +68,7 @@ void MAX6675Free( MAX6675 max6675 )
 #if defined(PIGPIO)
     gpioTerminate();
 #elif defined(PIGPIOIF2)
-
+    pigpio_stop( max6675->m_pi );
 #endif
 
     if ( max6675 ) {
@@ -114,9 +119,9 @@ float MAX6675GetTempC( MAX6675 max6675 )
 #elif defined (PIGPIO)
     char buf[2] = {0, 0};
     int ret = spiRead( max6675->m_handle, buf, 2 );
-#elif defined (PIGPIOID2)
+#elif defined (PIGPIOIF2)
     char buf[2] = {0, 0};
-    int ret = spi_read( max6675->m_pi, max65675->m_handle, buf, 2 );
+    int ret = spi_read( max6675->m_pi, max6675->m_handle, buf, 2 );
 #endif    
 
     if ( ret != 2 ) {

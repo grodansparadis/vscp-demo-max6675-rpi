@@ -15,8 +15,7 @@ typedef struct MAX6675 {
     MAX6675TempScale m_scale; 	// Temperature unit
 } *MAX6675;
 
-
-MAX6675 MAX6675Setup( int SPIChannel );
+MAX6675 MAX6675Setup( int spi_channel ); 
 void MAX6675Free( MAX6675 handle );
 
 void MAX6675SetScale( MAX6675 handle, MAX6675TempScale scale );
