@@ -8,9 +8,11 @@ typedef enum {
 } MAX6675TempScale;
 
 
-typedef struct MAX6675 {
-    int SPIChannel;
-    MAX6675TempScale scale;
+typedef struct MAX6675 {	
+    int m_pi;			// Used by pigpioif2 
+    int m_handle;		// Used by pigpio/pigpioif2
+    int m_SpiChannel;
+    MAX6675TempScale m_scale; 	// Temperature unit
 } *MAX6675;
 
 

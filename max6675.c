@@ -1,6 +1,17 @@
 #include <stdlib.h>
+
+#ifdef WIRINGPI
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
+#endif
+
+#ifdef PIGPIO
+#include "pigpio.h"
+#endif
+
+#ifdef PIGPIOIF2
+#include <pigpiod_if2.h>
+#endif
 
 #include "max6675.h"
 
@@ -13,16 +24,30 @@
 //
 //
 
-MAX6675 MAX6675Setup( int SPIChannel ) 
+
+#if defined(WIRINGPI) || defined(PIGPIO)
+MAX6675 MAX6675Setup( int spi_channel ) 
+#else
+MAX6675 MAX6675Setup( int pi, int spi_channel ) 
+#endif	
 {
-    if ( wiringPiSPISetup( SPIChannel, MAX6675_CLOCK_SPEED ) == -1 )  {
+    int h = 0;	
+#if defined(WIRINGPI)
+    if ( wiringPiSPISetup( spi_channel, MAX6675_CLOCK_SPEED ) == -1 )  {
+#elif defined(PIGPIO)
+    gpioInitialise();
+    if ( ( h = spiOpen(  spi_channel, MAX6675_CLOCK_SPEED , 0 ) ) < 0 ) {
+#elif defined(PIGPIOIF2)
+    if ( ( h = spi_open( pi, spi_channel, MAX6675_CLOCK_SPEED, 0 ) ) < 0 ) {
+#endif	    
         return 0;
     }
 
     MAX6675 max6675 = (MAX6675)malloc( sizeof( struct MAX6675) );
 
-    max6675->SPIChannel = SPIChannel;
-    max6675->scale = MAX6675_CELSIUS;
+    max6675->m_SpiChannel = spi_channel;
+    max6675->m_scale = MAX6675_CELSIUS;
+    max6675->m_handle = h;
 
     return max6675;
 }
@@ -34,6 +59,13 @@ MAX6675 MAX6675Setup( int SPIChannel )
 
 void MAX6675Free( MAX6675 max6675 ) 
 {
+
+#if defined(PIGPIO)
+    gpioTerminate();
+#elif defined(PIGPIOIF2)
+
+#endif
+
     if ( max6675 ) {
         free( max6675 );
     }
@@ -47,7 +79,7 @@ void MAX6675Free( MAX6675 max6675 )
 void MAX6675SetScale( MAX6675 max6675, MAX6675TempScale scale ) 
 {
     if ( max6675 ) {
-        max6675->scale = scale;
+        max6675->m_scale = scale;
     }
 }
 
@@ -59,7 +91,7 @@ void MAX6675SetScale( MAX6675 max6675, MAX6675TempScale scale )
 MAX6675TempScale MAX6675GetScale( MAX6675 max6675 ) 
 {
     if ( max6675 ) {
-        return max6675->scale;
+        return max6675->m_scale;
     }
 
     return MAX6675_CELSIUS;
@@ -76,15 +108,22 @@ float MAX6675GetTempC( MAX6675 max6675 )
         return 0.0f;
     }
 
-    unsigned char buffer[2] = {0, 0};
-
-    int ret = wiringPiSPIDataRW( max6675->SPIChannel, buffer, 2 );
+#if defined (WIRINGPI)
+    unsigned char buf[2] = {0, 0};
+    int ret = wiringPiSPIDataRW( max6675->m_SpiChannel, buf, 2 );
+#elif defined (PIGPIO)
+    char buf[2] = {0, 0};
+    int ret = spiRead( max6675->m_handle, buf, 2 );
+#elif defined (PIGPIOID2)
+    char buf[2] = {0, 0};
+    int ret = spi_read( max6675->m_pi, max65675->m_handle, buf, 2 );
+#endif    
 
     if ( ret != 2 ) {
         return 0.0f;
     }
 
-    short reading = (buffer[0] << 8) + buffer[1];
+    short reading = (buf[0] << 8) + buf[1];
     reading >>= 3;
 
     return reading * 0.25;
@@ -118,7 +157,7 @@ float MAX6675GetTemp( MAX6675 max6675 )
 {
     if ( max6675 ) {
 
-        switch ( max6675->scale ) {
+        switch ( max6675->m_scale ) {
 			
             case MAX6675_KELVIN:
                 return MAX6675GetTempK( max6675 );
