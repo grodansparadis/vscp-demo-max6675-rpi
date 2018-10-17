@@ -1,4 +1,4 @@
-# VSCP MAX6675 thermocouple i/f demo code for Raspberry Pi
+# VSCP MAX6675 thermocouple C i/f demo code for Raspberry Pi
 
 ![VSCP Logo](https://www.vscp.org/images/logo_200.png)
 
