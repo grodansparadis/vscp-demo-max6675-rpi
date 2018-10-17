@@ -1,15 +1,24 @@
-#LIBTYPE=WIRINGPI
-LIBTYPE=PIGPIO
-#LIBTYPE=PIGPIOIF2
+# Select one gpio lib to build for below
 
-#INCLIBS=-lwiringPi
+#USELIB=WIRINGPI
+#USELIB=PIGPIO
+USELIB=PIGPIOD
+
+ifeq ($(USELIB),PIGPIO)
 INCLIBS=-lpigpio -lpthread
-#INCLIBS=-lpigpiod_if2 -lpthread
+FLAGS=-DPIGPIO
+else ifeq ($(USELIB),PIGPIOD)
+INCLIBS=-lpigpiod_if2 -lpthread
+FLAGS=-DPIGPIOIF2
+else ifeq ($(USELIB),WIRINGPI)
+INCLIBS=-lwiringPi
+FLAGS=-DWIRINGPI
+endif
 
 all: logger6675 
 
 logger6675: logger6675.c max6675.c max6675.h
-	gcc  -D$(LIBTYPE) -Wall -o logger6675 logger6675.c max6675.c $(INCLIBS)
+	gcc  $(FLAGS) -Wall -o logger6675 logger6675.c max6675.c $(INCLIBS)
 
 clean:
 	rm -f logger6675

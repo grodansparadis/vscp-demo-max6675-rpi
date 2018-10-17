@@ -5,9 +5,9 @@
 #include "max6675.h"
 
 int main(void) {
-	MAX6675 max6675 = MAX6675Setup(0);
+	max6675_t *max6675 = MAX6675Setup(0);
 
-	if ( max6675 ) {
+	if ( NULL != max6675 ) {
 		while(1) {
 			printf("%0.2fC %0.2fK %0.2fF\n", 
 				MAX6675GetTempC(max6675),

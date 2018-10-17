@@ -8,23 +8,23 @@ typedef enum {
 } MAX6675TempScale;
 
 
-typedef struct MAX6675 {	
+typedef struct max6675 {	
     int m_pi;			// Used by pigpioif2 
     int m_handle;		// Used by pigpio/pigpioif2
     int m_SpiChannel;
     MAX6675TempScale m_scale; 	// Temperature unit
-} *MAX6675;
+} max6675_t;
 
-MAX6675 MAX6675Setup( int spi_channel ); 
-void MAX6675Free( MAX6675 handle );
+max6675_t * MAX6675Setup( int spi_channel ); 
+void MAX6675Free( max6675_t *handle );
 
-void MAX6675SetScale( MAX6675 handle, MAX6675TempScale scale );
-MAX6675TempScale MAX6675GetScale( MAX6675 handle );
+void MAX6675SetScale( max6675_t *handle, MAX6675TempScale scale );
+MAX6675TempScale MAX6675GetScale( max6675_t *handle );
 
-float MAX6675GetTempC( MAX6675 handle );
-float MAX6675GetTempK( MAX6675 handle );
-float MAX6675GetTempF( MAX6675 handle );
+float MAX6675GetTempC( max6675_t *handle );
+float MAX6675GetTempK( max6675_t *handle );
+float MAX6675GetTempF( max6675_t *handle );
 
-float MAX6675GetTemp( MAX6675 handle );
+float MAX6675GetTemp( max6675_t *handle );
 
 #endif

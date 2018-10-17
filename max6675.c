@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #ifdef WIRINGPI
 #include <wiringPi.h>
@@ -25,7 +26,7 @@
 //
 
 
-MAX6675 MAX6675Setup( int spi_channel ) 
+max6675_t * MAX6675Setup( int spi_channel ) 
 {
     int h = 0;	
     int pi = 0;
@@ -47,7 +48,7 @@ MAX6675 MAX6675Setup( int spi_channel )
         return 0;
     }
 
-    MAX6675 max6675 = (MAX6675)malloc( sizeof( struct MAX6675) );
+    max6675_t *max6675 = (max6675_t *)malloc( sizeof( struct max6675) );
 
     max6675->m_SpiChannel = spi_channel;
     max6675->m_scale = MAX6675_CELSIUS;
@@ -60,9 +61,8 @@ MAX6675 MAX6675Setup( int spi_channel )
 ///////////////////////////////////////////////////////////////////////////////
 // MAX6675Free
 //
-//
 
-void MAX6675Free( MAX6675 max6675 ) 
+void MAX6675Free( max6675_t *max6675 ) 
 {
 
 #if defined(PIGPIO)
@@ -71,7 +71,7 @@ void MAX6675Free( MAX6675 max6675 )
     pigpio_stop( max6675->m_pi );
 #endif
 
-    if ( max6675 ) {
+    if ( NULL != max6675 ) {
         free( max6675 );
     }
 }
@@ -81,9 +81,9 @@ void MAX6675Free( MAX6675 max6675 )
 //
 //
 
-void MAX6675SetScale( MAX6675 max6675, MAX6675TempScale scale ) 
+void MAX6675SetScale( max6675_t *max6675, MAX6675TempScale scale ) 
 {
-    if ( max6675 ) {
+    if ( NULL != max6675 ) {
         max6675->m_scale = scale;
     }
 }
@@ -93,9 +93,9 @@ void MAX6675SetScale( MAX6675 max6675, MAX6675TempScale scale )
 //
 //
 
-MAX6675TempScale MAX6675GetScale( MAX6675 max6675 ) 
+MAX6675TempScale MAX6675GetScale( max6675_t *max6675 ) 
 {
-    if ( max6675 ) {
+    if ( NULL != max6675 ) {
         return max6675->m_scale;
     }
 
@@ -107,9 +107,9 @@ MAX6675TempScale MAX6675GetScale( MAX6675 max6675 )
 //
 //
 
-float MAX6675GetTempC( MAX6675 max6675 ) 
+float MAX6675GetTempC( max6675_t *max6675 ) 
 {
-    if ( max6675 == 0 ) {
+    if ( NULL == max6675 ) {
         return 0.0f;
     }
 
@@ -139,18 +139,18 @@ float MAX6675GetTempC( MAX6675 max6675 )
 //
 //
 
-float MAX6675GetTempK( MAX6675 max6675 ) 
+float MAX6675GetTempK( max6675_t *max6675 ) 
 {
-    return MAX6675GetTempC(max6675) + 273.15;
+    return MAX6675GetTempC( max6675 ) + 273.15;
 }
 ///////////////////////////////////////////////////////////////////////////////
 // MAX6675GetTempF
 //
 //
 
-float MAX6675GetTempF( MAX6675 max6675 ) 
+float MAX6675GetTempF( max6675_t *max6675 ) 
 {
-    return (MAX6675GetTempC(max6675) * 1.8) + 32.0;
+    return ( MAX6675GetTempC( max6675 ) * 1.8) + 32.0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -158,7 +158,7 @@ float MAX6675GetTempF( MAX6675 max6675 )
 //
 //
 
-float MAX6675GetTemp( MAX6675 max6675 ) 
+float MAX6675GetTemp( max6675_t *max6675 ) 
 {
     if ( max6675 ) {
 
@@ -168,10 +168,10 @@ float MAX6675GetTemp( MAX6675 max6675 )
                 return MAX6675GetTempK( max6675 );
 
             case MAX6675_FAHRENHEIT:
-                return MAX6675GetTempF(max6675);
+                return MAX6675GetTempF( max6675 );
 
             default:
-                return MAX6675GetTempC(max6675);
+                return MAX6675GetTempC( max6675 );
         }
 
     } 
