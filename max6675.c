@@ -82,6 +82,7 @@ max6675_t * MAX6675Setup( int spi_channel )
     max6675->m_scale = MAX6675_CELSIUS;
     max6675->m_handle = h;
     max6675->m_pi = pi;
+    max6675->m_OpenSensor = 0;  // No open sensor detected
 
     return max6675;
 }
@@ -158,6 +159,11 @@ float MAX6675GetTempC( max6675_t *max6675 )
 
     short reading = (buf[0] << 8) + buf[1];
     reading >>= 3;
+
+    // If bit 2 is set we have am open sensor condition
+    if ( buf[0] | 4 ) {
+        max6675->m_OpenSensor = -1;
+    }
 
     return reading * 0.25;
 }

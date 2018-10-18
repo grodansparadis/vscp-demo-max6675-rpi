@@ -37,11 +37,16 @@ int main(void) {
 
 	if ( NULL != max6675 ) {
 		while(1) {
+
 			printf("%0.2fC %0.2fK %0.2fF\n", 
 				MAX6675GetTempC(max6675),
 				MAX6675GetTempK(max6675),
 				MAX6675GetTempF(max6675)
 			);
+
+			if ( -1 == max6675->m_OpenSensor) {
+				printf("Warning! Open sensor detected!\n");
+			}
 
 			sleep(1);
 		}

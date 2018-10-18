@@ -40,6 +40,7 @@ typedef struct max6675 {
     int m_pi;			// Used by pigpioif2 
     int m_handle;		// Used by pigpio/pigpioif2
     int m_SpiChannel;
+    int m_OpenSensor;   // != 0 if open sensor detected
     MAX6675TempScale m_scale; 	// Temperature unit
 } max6675_t;
 
