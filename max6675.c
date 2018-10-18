@@ -160,8 +160,9 @@ float MAX6675GetTempC( max6675_t *max6675 )
     short reading = (buf[0] << 8) + buf[1];
     reading >>= 3;
 
-    // If bit 2 is set we have am open sensor condition
-    if ( buf[0] | 4 ) {
+    // If bit 2 is set we have had an open sensor condition
+    max6675->m_OpenSensor = 0;
+    if ( buf[0] & 4 ) {
         max6675->m_OpenSensor = -1;
     }
 

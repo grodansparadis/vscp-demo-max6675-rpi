@@ -45,7 +45,8 @@ int main(void) {
 			);
 
 			if ( -1 == max6675->m_OpenSensor) {
-				printf("Warning! Open sensor detected!\n");
+			    printf("Warning! Open sensor detected!\n");
+                            max6675->m_OpenSensor = 0; // Reset
 			}
 
 			sleep(1);
