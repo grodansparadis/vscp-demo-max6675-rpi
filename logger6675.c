@@ -33,7 +33,7 @@
 #include "max6675.h"
 
 int main(void) {
-	max6675_t *max6675 = MAX6675Setup(0);
+	max6675_t *max6675 = MAX6675Setup(1);
 
 	if ( NULL != max6675 ) {
 		while(1) {
@@ -54,5 +54,8 @@ int main(void) {
 
 		// We never actually get here
 		MAX6675Free( max6675 );
+	}
+	else {
+	    printf("Faild to initialise the library\n");	
 	}
 }
