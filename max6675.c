@@ -44,7 +44,6 @@
 
 #include "max6675.h"
 
-
 #define MAX6675_CLOCK_SPEED 4000000
 
 
@@ -153,8 +152,9 @@ float MAX6675GetTempC( max6675_t *max6675 )
     int ret = spi_read( max6675->m_pi, max6675->m_handle, buf, 2 );
 #endif    
 
-    if ( ret != 2 ) {
-        return 0.0f;
+    // Should return two bytes. LSB bits must be "01"
+    if ( ret != 2 /*|| ( (buf[1] & 3) != 1 )*/ ) {
+        return 99999.0f;
     }
 
     short reading = (buf[0] << 8) + buf[1];
