@@ -11,6 +11,38 @@ Enable spi interface with **raspi-config** before building. Also define version 
  * PIGPIO - using the pigpio library (must be root)
  * PIGPIOIF2 - using the pigpio library and the pigpiod daemon (user space available)
 
+## pigpio
+
+The pigpio library is described [here](https://abyz.me.uk/rpi/pigpio/)
+
+On Debian systems install with
+
+```bash
+sudo apt install pigpio pigpiod
+```
+
+The pigpiod daemon must be running to run this codde. To have it started on boot
+
+```bash
+sudo systemctl enable pigpiod
+```
+
+Manually start service with
+
+```bash
+sudo systemctl start pigpiod 
+```
+
+and stop with
+
+```bash
+sudo systemctl start pigpiod 
+```
+
+
+
+
+
 Copyright -2018 Matthew Robinson - https://github.com/mttrb
-Copyright 2018 Changes and VSCP demo adoption [Ake Hedman, Grodans Paradis AB](akhe@grodansparadis.com)
+Copyright 2018-2022 Changes and VSCP demo adoption [Ake Hedman, Grodans Paradis AB](akhe@grodansparadis.com)
 

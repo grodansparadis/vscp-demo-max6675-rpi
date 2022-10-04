@@ -52,4 +52,6 @@ int main(void) {
 	    printf("Faild to initialise the library\n");	
 	    return -1;
 	}
+
+	return 0;		
 }
