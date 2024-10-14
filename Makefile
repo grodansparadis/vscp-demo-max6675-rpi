@@ -1,8 +1,8 @@
 # Select one gpio lib to build for below
 
-#USELIB=WIRINGPI
+USELIB=WIRINGPI
 #USELIB=PIGPIO
-USELIB=PIGPIOD
+#USELIB=PIGPIOD
 
 ifeq ($(USELIB),PIGPIO)
 INCLIBS=-lpigpio -lpthread

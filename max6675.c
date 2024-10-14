@@ -57,6 +57,7 @@ max6675_t * MAX6675Setup( int spi_channel )
 {
     int h = 0;	
     int pi = 0;
+	
 #if defined(WIRINGPI)
     if ( wiringPiSPISetup( spi_channel, MAX6675_CLOCK_SPEED ) == -1 )  {
 #elif defined(PIGPIO)
@@ -74,7 +75,6 @@ max6675_t * MAX6675Setup( int spi_channel )
 #endif
         return 0;
     }
-
     max6675_t *max6675 = (max6675_t *)malloc( sizeof( struct max6675) );
 
     max6675->m_SpiChannel = spi_channel;
