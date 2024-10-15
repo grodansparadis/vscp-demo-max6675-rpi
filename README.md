@@ -21,7 +21,7 @@ On Debian systems install with
 sudo apt install pigpio pigpiod
 ```
 
-The pigpiod daemon must be running to run this codde. To have it started on boot
+The pigpiod daemon must be running to run this code. To have it started on boot
 
 ```bash
 sudo systemctl enable pigpiod
@@ -43,6 +43,6 @@ sudo systemctl start pigpiod
 
 
 
-Copyright -2018 Matthew Robinson - https://github.com/mttrb
-Copyright 2018-2022 Changes and VSCP demo adoption [Ake Hedman, Grodans Paradis AB](akhe@grodansparadis.com)
+Copyright -2018 Matthew Robinson - https://github.com/mttrb <br/>
+Copyright 2018-2024 Changes and VSCP demo adoption [Ake Hedman, Grodans Paradis AB](akhe@grodansparadis.com)
 
